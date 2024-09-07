@@ -9,47 +9,74 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    
+    @Environment(\.modelContext) var context
+    
+    @State private var showCreateOrder = false
+    @State private var showSettingsView = false
+    @State private var orderDetails: Order?
+    @Query(
+        sort: \Order.timestamp,
+        order: .reverse
+    ) private var orders: [Order]
 
     var body: some View {
-        NavigationSplitView {
+        NavigationStack {
             List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
+                ForEach(orders) { order in
+                    HStack {
+                        Text("\(order.timestamp, format: Date.FormatStyle(date: .numeric)), Units: \(String(order.units))")
+                    }
+                    .swipeActions {
+                        Button(role: .destructive) {
+                            withAnimation {
+                                context.delete(order)
+                            }
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                                .symbolVariant(/*@START_MENU_TOKEN@*/.fill/*@END_MENU_TOKEN@*/)
+                        }
+                        
+                        Button {
+                            orderDetails = order
+                        } label: {
+                            Label("See Details", systemImage: "magnifyingglass")
+                        }
+                        .tint(.blue)
                     }
                 }
-                .onDelete(perform: deleteItems)
             }
+            .navigationTitle("My Orders")
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+                ToolbarItem (placement: .navigationBarLeading) {
+                    Button(action: {
+                        showSettingsView.toggle()
+                    }, label: {
+                        Label("Settings", systemImage: "gearshape")
+                    })
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
+                ToolbarItem (placement: .navigationBarTrailing) {
+                    Button(action: {
+                        showCreateOrder.toggle()
+                    }, label: {
+                        Label("Add Order", systemImage: "plus")
+                    })
                 }
             }
-        } detail: {
-            Text("Select an item")
-        }
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
-    }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
+            .sheet(isPresented: $showCreateOrder, content: {
+                NavigationStack {
+                    CheckoutView(basket: Basket())
+                }
+            })
+            .sheet(isPresented: $showSettingsView, content: {
+                NavigationStack {
+                    SettingsView()
+                }
+            })
+            .sheet(item: $orderDetails) {
+                orderDetails = nil
+            } content: { order in
+                OrderDetailsView(order: order)
             }
         }
     }
@@ -57,5 +84,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+        .modelContainer(for: [Order.self])
 }
