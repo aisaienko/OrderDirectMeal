@@ -13,10 +13,12 @@ final class SettingsItem: Identifiable {
     var id: String
     var messageHeader: String
     var messageFooter: String
+    var menuURL: String
     
-    init(messageHeader: String = "", messageFooter: String = "") {
+    init(messageHeader: String = "", messageFooter: String = "", menuURL: String = "") {
         self.id = UUID().uuidString
         self.messageHeader = messageHeader
         self.messageFooter = messageFooter
+        self.menuURL = menuURL
     }
 }

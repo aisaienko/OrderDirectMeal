@@ -35,16 +35,18 @@ struct CheckoutView: View {
                                     basket.isExpanded.remove(category.id)
                                 }
                             })) {
-                                ForEach(category.products) { product in
+                                ForEach(category.products.sorted {
+                                    $0.mealIndex < $1.mealIndex
+                                }) { product in
                                     HStack {
                                         ProductLineItemView(product: product,
                                                             onIncrement: {
-                                            category.totalPrice += product.price
-                                            basket.totalUnits += product.price
+                                            category.updateTotalPrice()
+                                            basket.updateTotals()
                                         },
                                                             onDecrement: {
-                                            category.totalPrice -= category.totalPrice >= product.price ? product.price : 0
-                                            basket.totalUnits -= basket.totalUnits >= product.price ? product.price : 0
+                                            category.updateTotalPrice()
+                                            basket.updateTotals()
                                         })
                                     }
                                     .listRowBackground(product.quantity > 0 ? Color.green.opacity(0.2) : Color.clear)
@@ -106,8 +108,12 @@ struct CheckoutView: View {
 
 #Preview {
     struct Container: View {
-        let previewBasket: Basket = Basket()
+        @Query(
+            sort: \CategoryItem.index,
+            order: .forward
+        ) private var categoryItems: [CategoryItem]
         var body: some View {
+            let previewBasket: Basket = Basket(categoryItems: categoryItems)
             CheckoutView(basket: previewBasket)
         }
     }

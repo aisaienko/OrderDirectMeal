@@ -19,6 +19,10 @@ struct ContentView: View {
         sort: \Order.timestamp,
         order: .reverse
     ) private var orders: [Order]
+    @Query(
+        sort: \CategoryItem.index,
+        order: .forward
+    ) private var categoryItems: [CategoryItem]
 
     var body: some View {
         NavigationStack {
@@ -65,7 +69,7 @@ struct ContentView: View {
             }
             .sheet(isPresented: $showCreateOrder, content: {
                 NavigationStack {
-                    CheckoutView(basket: Basket())
+                    CheckoutView(basket: Basket(categoryItems: categoryItems))
                 }
             })
             .sheet(isPresented: $showSettingsView, content: {

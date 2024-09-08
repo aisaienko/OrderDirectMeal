@@ -12,22 +12,29 @@ import Foundation
     var totalUnits: Double
     var categories : [Category]
     
-    init(totalUnits: Double = 0) {
+    init(categoryItems: [CategoryItem], totalUnits: Double = 0) {
         self.totalUnits = totalUnits
-        let decodedCategories: [MealCategoriesResponse] = MealItemsJSONDecoder.decode(from: "DefaultMealsList")
-        var categoryItems: [Category] = []
-        if decodedCategories.isEmpty == false {
-            decodedCategories.forEach { categoryItem in
+        var categories: [Category] = []
+        if categoryItems.isEmpty == false {
+            categoryItems.forEach { categoryItem in
                 var products: [Product] = []
-                categoryItem.mealItems.forEach {mealItem in
-                    let product = Product(name: mealItem.name, price: mealItem.price, mealIndex: mealItem.mealIndex, amount: mealItem.amount)
+                categoryItem.productItems.forEach {productItem in
+                    let product = Product(name: productItem.name, price: productItem.price, mealIndex: productItem.mealIndex, amount: productItem.amount)
                     products.append(product)
                 }
                 let category = Category(name: categoryItem.name, index: categoryItem.index, products: products)
-                categoryItems.append(category)
+                categories.append(category)
             }
         }
-        self.categories = categoryItems
+        self.categories = categories
+    }
+    
+    func updateTotals() {
+        var newTotals: Double = 0
+        self.categories.forEach { category in
+            newTotals += category.totalPrice
+        }
+        self.totalUnits = newTotals
     }
     
     func updateOrder(order: Order, settings: SettingsItem) {
@@ -68,6 +75,14 @@ import Foundation
             categoryPrice += product.isSelected ? (Double(product.quantity) * product.price) : 0
         }
         self.totalPrice = categoryPrice
+    }
+    
+    func updateTotalPrice() {
+        var newTotal: Double = 0;
+        self.products.forEach { product in
+            newTotal += Double(product.quantity) * product.price
+        }
+        self.totalPrice = newTotal
     }
 }
 

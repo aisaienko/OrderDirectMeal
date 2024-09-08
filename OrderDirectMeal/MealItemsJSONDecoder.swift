@@ -34,4 +34,16 @@ struct MealItemsJSONDecoder {
         
         return mealCategories
     }
+    
+    static func decodeFromUrl(urlPath: String, completion:@escaping ([MealCategoriesResponse]?) -> ()) {
+        let menuUrl = URL(string: urlPath)!
+        URLSession.shared.dataTask(with: menuUrl) { data,_,_  in
+            let menu = try? JSONDecoder().decode([MealCategoriesResponse].self, from: data!)
+            
+            DispatchQueue.main.async {
+                completion(menu)
+            }
+        }
+        .resume()
+    }
 }

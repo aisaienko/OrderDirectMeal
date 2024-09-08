@@ -23,6 +23,8 @@
 		CDCF2B0F2C8A13ED003FDCA5 /* OrderDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCF2B0E2C8A13ED003FDCA5 /* OrderDetailsView.swift */; };
 		CDCF2B112C8A1414003FDCA5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCF2B102C8A1414003FDCA5 /* SettingsView.swift */; };
 		CDCF2B132C8A143C003FDCA5 /* ProductLineItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCF2B122C8A143C003FDCA5 /* ProductLineItemView.swift */; };
+		CDCF2B152C8CBA88003FDCA5 /* CategoryItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCF2B142C8CBA88003FDCA5 /* CategoryItem.swift */; };
+		CDCF2B172C8CBCB0003FDCA5 /* ProductItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCF2B162C8CBCB0003FDCA5 /* ProductItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,8 @@
 		CDCF2B0E2C8A13ED003FDCA5 /* OrderDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderDetailsView.swift; sourceTree = "<group>"; };
 		CDCF2B102C8A1414003FDCA5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		CDCF2B122C8A143C003FDCA5 /* ProductLineItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductLineItemView.swift; sourceTree = "<group>"; };
+		CDCF2B142C8CBA88003FDCA5 /* CategoryItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryItem.swift; sourceTree = "<group>"; };
+		CDCF2B162C8CBCB0003FDCA5 /* ProductItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -91,6 +95,8 @@
 				CDCF2B082C8A1321003FDCA5 /* DefaultMealsList.json */,
 				CDCF2AF32C89FB1F003FDCA5 /* Assets.xcassets */,
 				CDCF2AF52C89FB1F003FDCA5 /* Preview Content */,
+				CDCF2B142C8CBA88003FDCA5 /* CategoryItem.swift */,
+				CDCF2B162C8CBCB0003FDCA5 /* ProductItem.swift */,
 			);
 			path = OrderDirectMeal;
 			sourceTree = "<group>";
@@ -184,7 +190,9 @@
 				CDCF2B032C8A0DD7003FDCA5 /* Basket.swift in Sources */,
 				CDCF2B072C8A12E2003FDCA5 /* SettingsItem.swift in Sources */,
 				CDCF2B112C8A1414003FDCA5 /* SettingsView.swift in Sources */,
+				CDCF2B152C8CBA88003FDCA5 /* CategoryItem.swift in Sources */,
 				CDCF2AF22C89FB1D003FDCA5 /* OrderItem.swift in Sources */,
+				CDCF2B172C8CBCB0003FDCA5 /* ProductItem.swift in Sources */,
 				CDCF2AEE2C89FB1D003FDCA5 /* OrderDirectMealApp.swift in Sources */,
 				CDCF2B132C8A143C003FDCA5 /* ProductLineItemView.swift in Sources */,
 			);
