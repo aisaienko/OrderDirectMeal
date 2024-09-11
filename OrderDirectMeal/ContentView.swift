@@ -30,6 +30,11 @@ struct ContentView: View {
                 ForEach(orders) { order in
                     HStack {
                         Text("\(order.timestamp, format: Date.FormatStyle(date: .numeric)), Units: \(String(order.units))")
+                        Spacer()
+                    }
+                    .contentShape(Rectangle())
+                    .onTapGesture {
+                        orderDetails = order
                     }
                     .swipeActions {
                         Button(role: .destructive) {
@@ -87,6 +92,12 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
-        .modelContainer(for: [Order.self])
+    struct Container: View {
+        @Query var orders: [Order]
+        var body: some View {
+            ContentView()
+        }
+    }
+    return Container()
+        .modelContainer(previewContainer)
 }

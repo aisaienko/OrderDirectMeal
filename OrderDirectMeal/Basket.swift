@@ -7,12 +7,14 @@
 
 import Foundation
 
-@Observable class Basket: ObservableObject {
+@Observable class Basket: ObservableObject, Identifiable {
+    let id: UUID
     var isExpanded: Set<UUID> = []
     var totalUnits: Double
     var categories : [Category]
     
     init(categoryItems: [CategoryItem], totalUnits: Double = 0) {
+        self.id = UUID()
         self.totalUnits = totalUnits
         var categories: [Category] = []
         if categoryItems.isEmpty == false {
@@ -29,6 +31,32 @@ import Foundation
         self.categories = categories
     }
     
+    init(categoryItems: [CategoryItem], order: Order) {
+        self.id = UUID()
+        var totalUnits: Double = 0
+        var categories: [Category] = []
+        if categoryItems.isEmpty == false {
+            categoryItems.forEach { categoryItem in
+                var products: [Product] = []
+                categoryItem.productItems.forEach {productItem in
+                    if let productFromOrder = order.orderItems.first(where: {$0.mealIndex == productItem.mealIndex && $0.name == productItem.name}) {
+                        let product = Product(name: productFromOrder.name, price: productFromOrder.price, mealIndex: productFromOrder.mealIndex, amount: productFromOrder.amount, quantity: productFromOrder.quantity)
+                        products.append(product)
+                    } else {
+                        let product = Product(name: productItem.name, price: productItem.price, mealIndex: productItem.mealIndex, amount: productItem.amount)
+                        products.append(product)
+                    }
+                }
+                let category = Category(name: categoryItem.name, index: categoryItem.index, products: products)
+                category.updateTotalPrice()
+                totalUnits += category.totalPrice
+                categories.append(category)
+            }
+        }
+        self.categories = categories
+        self.totalUnits = totalUnits
+    }
+    
     func updateTotals() {
         var newTotals: Double = 0
         self.categories.forEach { category in
@@ -40,6 +68,7 @@ import Foundation
     func updateOrder(order: Order, settings: SettingsItem) {
         order.timestamp = .now
         order.units = self.totalUnits
+        order.orderItems = []
         categories.forEach { category in
             category.products.forEach { product in
                 if product.quantity > 0 {
@@ -72,7 +101,7 @@ import Foundation
         self.index = index
         self.products = products
         products.forEach { product in
-            categoryPrice += product.isSelected ? (Double(product.quantity) * product.price) : 0
+            categoryPrice += product.quantity > 0 ? (Double(product.quantity) * product.price) : 0
         }
         self.totalPrice = categoryPrice
     }
@@ -92,16 +121,14 @@ import Foundation
     let price: Double
     let amount: String
     let mealIndex: Int
-    var isSelected: Bool
     var quantity: Int
     
-    init(name: String, price: Double, mealIndex: Int, amount: String = "", isSelected: Bool = false, quantity: Int = 0) {
+    init(name: String, price: Double, mealIndex: Int, amount: String = "", quantity: Int = 0) {
         self.id = UUID()
         self.name = name
         self.price = price
         self.mealIndex = mealIndex
         self.amount = amount
-        self.isSelected = isSelected
         self.quantity = quantity
     }
 }

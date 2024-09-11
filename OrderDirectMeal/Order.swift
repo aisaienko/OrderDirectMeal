@@ -9,7 +9,7 @@ import Foundation
 import SwiftData
 
 @Model
-final class Order: Identifiable {
+final class Order: ObservableObject, Identifiable {
     var id: String
     var timestamp: Date
     var units: Double

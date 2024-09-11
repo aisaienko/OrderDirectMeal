@@ -14,7 +14,8 @@ struct CheckoutView: View {
     @Environment(\.modelContext) private var modelContext
     
     @StateObject var basket: Basket
-    @State private var order = Order()
+    @State var order = Order()
+    @State var isNewOrder: Bool = true
     
     @Query var settings: [SettingsItem]
     private let pasteboard = UIPasteboard.general
@@ -70,6 +71,12 @@ struct CheckoutView: View {
                     .toolbar {
                         ToolbarItem (placement: .navigationBarLeading) {
                             Button(action: {
+                                if isNewOrder == false {
+                                    settings.forEach { settingItem in
+                                        basket.updateOrder(order: order, settings: settingItem)
+                                    }
+                                    try? modelContext.save()
+                                }
                                 dismiss()
                             }, label: {
                                 Label("Back", systemImage: "chevron.backward")
@@ -81,7 +88,9 @@ struct CheckoutView: View {
                         ToolbarItem (placement: .navigationBarTrailing) {
                             Button(action: {
                                 withAnimation {
-                                    modelContext.insert(order)
+                                    if isNewOrder {
+                                        modelContext.insert(order)
+                                    }
                                     settings.forEach { settingItem in
                                         basket.updateOrder(order: order, settings: settingItem)
                                     }
